@@ -301,6 +301,13 @@ doy_kde_weights <- function(
     stop("`n_days` must be 365 or 366.")
   }
 
+  if (n_days == 365L &&
+      (any(A_doy == 366L) || any(B_doy == 366L))) {
+    stop(
+      "`n_days = 365` cannot be used when `A_dates` or `B_dates` contains day 366."
+    )
+  }
+
   if (is.null(n)) n <- n_days
   n <- as.integer(n)
   if (n < 10L) stop("`n` must be >= 10.")
