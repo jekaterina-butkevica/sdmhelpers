@@ -297,8 +297,16 @@ doy_kde_weights <- function(
   } else {
     n_days <- as.integer(n_days)
   }
+
   if (!isTRUE(n_days %in% c(365L, 366L))) {
     stop("`n_days` must be 365 or 366.")
+  }
+
+  if (n_days == 365L &&
+      (any(A_doy == 366L) || any(B_doy == 366L))) {
+    stop(
+      "`n_days = 365` cannot be used when `A_dates` or `B_dates` contains day 366."
+    )
   }
 
   if (is.null(n)) n <- n_days
@@ -308,7 +316,23 @@ doy_kde_weights <- function(
   # Wrap-around trick for circular KDE on DoY
   A_ext <- c(A_doy - n_days, A_doy, A_doy + n_days)
 
-  dens <- stats::density(A_ext, bw = bw, from = 1, to = n_days, n = n)
+  bw_used <- if (is.character(bw)) {
+    switch(bw,
+           nrd0 = stats::bw.nrd0(A_doy),
+           nrd  = stats::bw.nrd(A_doy),
+           ucv  = stats::bw.ucv(A_doy),
+           bcv  = stats::bw.bcv(A_doy),
+           SJ   = stats::bw.SJ(A_doy),
+           stop("Unknown bandwidth selection method."))
+  } else {
+    bw
+  }
+
+  dens <- stats::density(A_ext,
+                         bw = bw_used,
+                         from = 1,
+                         to = n_days,
+                         n = n)
 
   # Look up A-derived density at DoY(B)
   w_raw <- stats::approx(dens$x, dens$y, xout = B_doy, rule = 2)$y
@@ -332,12 +356,10 @@ doy_kde_weights <- function(
     stop("Unknown `scale` method.")
   }
 
-  list(
-    weights_raw = w_raw,
-    weights     = w,
-    B_doy       = B_doy,
-    density     = list(x = dens$x, y = dens$y),
-    scale       = scale,
-    n_days      = n_days
-  )
+  list(weights_raw = w_raw,
+       weights     = w,
+       B_doy       = B_doy,
+       density     = list(x = dens$x, y = dens$y),
+       scale       = scale,
+       n_days      = n_days)
 }
