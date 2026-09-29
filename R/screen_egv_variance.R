@@ -188,6 +188,23 @@ screen_egv_variance <- function(
 
   env_sample_n <- as.integer(env_sample_n)
 
+
+  if (!is.null(seed)) {
+    if (
+      !is.numeric(seed) ||
+      length(seed) != 1L ||
+      is.na(seed) ||
+      !is.finite(seed) ||
+      seed != floor(seed)
+    ) {
+      stop(
+        "`seed` must be NULL or one finite integer.",
+        call. = FALSE
+      )
+    }
+  }
+
+
   # ---- Extract training data ----
 
   train_data <- as.data.frame(methods::slot(train, "data"))
