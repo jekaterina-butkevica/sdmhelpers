@@ -204,6 +204,31 @@ screen_egv_variance <- function(
     }
   }
 
+  if (
+    !is.logical(include_test_bg) ||
+    length(include_test_bg) != 1L ||
+    is.na(include_test_bg)
+  ) {
+    ...
+  }
+
+  if (
+    !is.logical(check_test) ||
+    length(check_test) != 1L ||
+    is.na(check_test)
+  ) {
+    ...
+  }
+
+  if (
+    !is.logical(verbose) ||
+    length(verbose) != 1L ||
+    is.na(verbose)
+  ) {
+    ...
+  }
+
+
 
   # ---- Extract training data ----
 
