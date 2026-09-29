@@ -175,10 +175,14 @@ screen_egv_variance <- function(
     stop("`sd_tol` must be one finite, non-negative number.")
   }
 
-  if (length(env_sample_n) != 1L ||
-      !is.numeric(env_sample_n) ||
-      !is.finite(env_sample_n) ||
-      env_sample_n < 2) {
+  if (
+    !is.numeric(env_sample_n) ||
+    length(env_sample_n) != 1L ||
+    is.na(env_sample_n) ||
+    !is.finite(env_sample_n) ||
+    env_sample_n < 2 ||
+    env_sample_n != floor(env_sample_n)
+  ) {
     stop("`env_sample_n` must be an integer >= 2.")
   }
 
