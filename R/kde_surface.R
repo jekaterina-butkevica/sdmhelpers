@@ -324,11 +324,10 @@ kde_surface <- function(
     if (
       !is.numeric(w) ||
       anyNA(w) ||
-      any(!is.finite(w)) ||
-      any(w < 0)
+      any(!is.finite(w))
     ) {
       stop(
-        "Weights must be finite, non-negative numeric values with no NA.",
+        "Weights must be finite numeric values with no NA.",
         call. = FALSE
       )
     }
