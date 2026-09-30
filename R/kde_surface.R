@@ -224,6 +224,19 @@ kde_surface <- function(
 ) {
   normalize <- match.arg(normalize)
 
+  # Validate engine
+  if (
+    !is.character(engine) ||
+    length(engine) != 1L ||
+    is.na(engine) ||
+    !(engine %in% c("auto", "fft", "cpp"))
+  ) {
+    stop(
+      "`engine` must be one of 'auto', 'fft', or 'cpp'.",
+      call. = FALSE
+    )
+  }
+
   # --- checks ---
 
   if (!inherits(ref, "SpatRaster")) {
